@@ -30,8 +30,8 @@ public class AuthController {
         return new DipendenteLoginResoDTO(this.authService.checkCredenzialiAndGeneraToken(body));
     }
 
-    // POST --> creo un nuovo record --- +body
     @PostMapping("/register")
+    //@PreAuthorize("hasAuthority('ADMIN')") // solo gli admin possono registrare nuovi dipendenti
     @ResponseStatus(HttpStatus.CREATED)
     public NewDipendenteRespDTO createDipendente(@RequestBody @Validated NewDipendenteDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
@@ -45,4 +45,5 @@ public class AuthController {
             return new NewDipendenteRespDTO(this.dipendenteService.saveDipendente(body).getId());
         }
     }
+
 }

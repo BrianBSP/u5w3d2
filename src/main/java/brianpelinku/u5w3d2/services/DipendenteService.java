@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,13 +28,16 @@ public class DipendenteService {
     @Autowired
     private Cloudinary cloudinary;
 
+    @Autowired
+    private PasswordEncoder bcrypt;
+
     // salvo nuovo dipendente nel DB --> post + body
     public Dipendente saveDipendente(NewDipendenteDTO body) {
 
         this.dipendenteRepository.findByEmail(body.email()).ifPresent(author -> {
             throw new BadRequestException("L'email " + body.email() + " è già in uso.");
         });
-        Dipendente newDip = new Dipendente(body.username(), body.nome(), body.cognome(), body.email(), body.password(),
+        Dipendente newDip = new Dipendente(body.username(), body.nome(), body.cognome(), body.email(), bcrypt.encode(body.password()),
                 "https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
 
         // salvo il nuovo record

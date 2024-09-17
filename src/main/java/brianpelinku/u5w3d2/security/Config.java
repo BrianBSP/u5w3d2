@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -27,6 +29,11 @@ public class Config {
         httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").permitAll());
 
         return httpSecurity.build();
+    }
 
+    // metodo di sicurezza per le password
+    @Bean
+    PasswordEncoder getBCrypt() {
+        return new BCryptPasswordEncoder(11); // l'11 è il num di round (volte che viene eseguito l'algoritmo) utile per regolare la velocità di esecuzione.
     }
 }
